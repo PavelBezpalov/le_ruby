@@ -23,6 +23,7 @@ module Le
 
     opt_udp_port = options[:udp_port]                   || nil
     opt_use_data_endpoint = options[:data_endpoint]     || false
+    opt_sidekiq = options[:sidekiq]                     || false
 
     self.checkParams(token, opt_datahub_enabled, opt_udp_port)
 
@@ -33,10 +34,10 @@ module Le
       logger = ActiveSupport::TaggedLogging.new(Logger.new(host))
     elsif defined?(ActiveSupport::Logger)
       logger = ActiveSupport::Logger.new(host)
-      logger.formatter = host.formatter if host.respond_to?(:formatter)
+      logger.formatter = host.formatter if host.respond_to?(:formatter) && !opt_sidekiq
     else
       logger = Logger.new(host)
-      logger.formatter = host.formatter if host.respond_to?(:formatter)
+      logger.formatter = host.formatter if host.respond_to?(:formatter) && !opt_sidekiq
     end
 
     logger.level = opt_log_level
